@@ -282,22 +282,22 @@
       function showMessageDialog(message, title = "Error") {
         const backdrop = document.createElement("div");
         backdrop.style.cssText =
-          "position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; z-index: 10000;";
+          "position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.6); display: flex; align-items: center; justify-content: center; z-index: 10000;";
 
         const modal = document.createElement("div");
         modal.style.cssText =
-          "background: white; border-radius: 12px; padding: 24px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2); max-width: 400px; text-align: center;";
+          "background: white; border-radius: 16px; padding: 40px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); max-width: 520px; text-align: center;";
 
         const titleEl = document.createElement("h2");
         titleEl.textContent = title;
         titleEl.style.cssText =
-          "margin: 0 0 12px 0; font-size: 18px; color: #dc2626;";
+          "margin: 0 0 16px 0; font-size: 26px; color: #dc2626; font-weight: 700;";
         modal.appendChild(titleEl);
 
         const msg = document.createElement("p");
         msg.textContent = message;
         msg.style.cssText =
-          "margin: 0 0 24px 0; font-size: 14px; color: #666; line-height: 1.5;";
+          "margin: 0 0 32px 0; font-size: 16px; color: #555; line-height: 1.6;";
         modal.appendChild(msg);
 
         const btnContainer = document.createElement("div");
@@ -307,7 +307,9 @@
         const okBtn = document.createElement("button");
         okBtn.textContent = "OK";
         okBtn.style.cssText =
-          "padding: 8px 20px; border-radius: 6px; border: none; background: #4caf50; color: white; cursor: pointer; font-size: 14px; font-weight: 600;";
+          "padding: 12px 32px; border-radius: 8px; border: none; background: #4caf50; color: white; cursor: pointer; font-size: 16px; font-weight: 600; transition: background 0.3s;";
+        okBtn.onmouseover = () => (okBtn.style.background = "#45a049");
+        okBtn.onmouseout = () => (okBtn.style.background = "#4caf50");
         okBtn.onclick = () => {
           backdrop.remove();
         };
@@ -391,7 +393,10 @@
             localStorage.setItem("admin_user", username);
             window.location.href = "admin.html";
           } else {
-            showMessageDialog("Invalid username or password. Please try again.", "Login Failed");
+            showMessageDialog(
+              "Invalid username or password. Please try again.",
+              "Login Failed",
+            );
           }
         });
 
