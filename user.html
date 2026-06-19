@@ -120,6 +120,12 @@
           flex: 1;
           word-wrap: break-word;
         }
+        .print-page {
+          page-break-after: always;
+        }
+        .print-page:last-child {
+          page-break-after: avoid;
+        }
         .print-footer {
           text-align: center;
           font-size: 9pt;

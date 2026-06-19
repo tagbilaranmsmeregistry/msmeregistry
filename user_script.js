@@ -199,22 +199,36 @@ function printRegistry() {
       ? "Selected Businesses Report"
       : "Business Registry Report";
 
-  let html = `
-    <table class="print-table-wrapper">
-      <thead><tr><td><div class="print-header"><h2>Tagbilaran City MSME Registry</h2><p>${reportSub}</p>
-      <div>Date: ${date} | Total Records: ${toPrint.length}</div></div></td></tr></thead>
-      <tbody><tr><td><div class="print-list">${toPrint
-        .map(
-          (b, i) => `
-        <div class="print-item">
-          <div class="print-item-title">${i + 1}. ${window.escapeHtml(b.name)}</div>
-          <div class="print-item-row"><strong>Location:</strong> <span>${window.escapeHtml(b.location || "—")}</span></div>
-          <div class="print-item-row"><strong>Owner:</strong> <span>${window.escapeHtml(b.owner || "—")}</span></div>
-          <div class="print-item-row"><strong>Line of Business:</strong> <span>${window.escapeHtml(b.type || "Unclassified")}</span></div>
-        </div>`,
-        )
-        .join("")}</div></td></tr></tbody>
-    </table>`;
+  // Group items into chunks for pagination (8 items per page)
+  const itemsPerPrintPage = 8;
+  const pages = [];
+  for (let i = 0; i < toPrint.length; i += itemsPerPrintPage) {
+    pages.push(toPrint.slice(i, i + itemsPerPrintPage));
+  }
+
+  let html = pages
+    .map(
+      (pageItems, pageIndex) => `
+    <div class="print-page">
+      <table class="print-table-wrapper">
+        <thead><tr><td><div class="print-header"><h2>Tagbilaran City MSME Registry</h2><p>${reportSub}</p>
+        <div>Date: ${date} | Total Records: ${toPrint.length}</div></div></td></tr></thead>
+        <tbody><tr><td><div class="print-list">${pageItems
+          .map(
+            (b, i) => `
+          <div class="print-item">
+            <div class="print-item-title">${pageIndex * itemsPerPrintPage + i + 1}. ${window.escapeHtml(b.name)}</div>
+            <div class="print-item-row"><strong>Location:</strong> <span>${window.escapeHtml(b.location || "—")}</span></div>
+            <div class="print-item-row"><strong>Owner:</strong> <span>${window.escapeHtml(b.owner || "—")}</span></div>
+            <div class="print-item-row"><strong>Line of Business:</strong> <span>${window.escapeHtml(b.type || "Unclassified")}</span></div>
+          </div>`,
+          )
+          .join("")}</div></td></tr></tbody>
+      </table>
+    </div>`,
+    )
+    .join("");
+
   document.getElementById("print-area").innerHTML = html;
   setTimeout(() => window.print(), 600);
 }
@@ -236,25 +250,37 @@ function exportDocx() {
       ? "Selected Businesses Report"
       : "Business Registry Report";
 
-  const innerHtml = `
-    <table style="width: 100%; border-collapse: collapse;">
-      <thead><tr><td><div style="text-align: center; border-bottom: 2pt solid #000; padding-bottom: 8pt; margin-bottom: 12pt;">
+  // Group items into chunks for pagination (8 items per page)
+  const itemsPerDocPage = 8;
+  const pages = [];
+  for (let i = 0; i < toExport.length; i += itemsPerDocPage) {
+    pages.push(toExport.slice(i, i + itemsPerDocPage));
+  }
+
+  const innerHtml = pages
+    .map(
+      (pageItems, pageIndex) => `
+    <div style="margin-bottom: 20pt; padding-top: ${pageIndex > 0 ? "40pt" : "0"}; border-top: ${pageIndex > 0 ? "2pt solid #000;" : "none"}">
+      <div style="text-align: center; margin-bottom: 15pt;">
         <h2 style="margin: 0; font-size: 24pt; font-weight: bold; letter-spacing: 1px;">Tagbilaran City MSME Registry</h2>
         <p style="margin: 2pt 0 0; color: #333; font-size: 13pt; font-weight: 600;">${reportSub}</p>
         <div style="font-size: 11pt; margin-top: 2pt; color: #666;">Date: ${date} | Total Records: ${toExport.length}</div>
-      </div></td></tr></thead>
-      <tbody><tr><td><div class="print-list">${toExport
+      </div>
+      <div>${pageItems
         .map(
           (b, i) => `
-        <div style="margin-bottom: 12pt; padding-bottom: 8pt; border-bottom: 1pt solid #d0d0d0; page-break-inside: avoid;">
-          <div style="font-size: 14pt; font-weight: bold; margin-bottom: 4pt;">${i + 1}. ${window.escapeHtml(b.name)}</div>
+        <div style="margin-bottom: 12pt; padding-bottom: 8pt; border-bottom: 1pt solid #d0d0d0;">
+          <div style="font-size: 14pt; font-weight: bold; margin-bottom: 4pt;">${pageIndex * itemsPerDocPage + i + 1}. ${window.escapeHtml(b.name)}</div>
           <div style="font-size: 12pt; margin-bottom: 2pt; line-height: 1.4;"><strong style="display: inline-block; min-width: 140px;">Location:</strong> ${window.escapeHtml(b.location || "—")}</div>
           <div style="font-size: 12pt; margin-bottom: 2pt; line-height: 1.4;"><strong style="display: inline-block; min-width: 140px;">Owner:</strong> ${window.escapeHtml(b.owner || "—")}</div>
           <div style="font-size: 12pt; margin-bottom: 2pt; line-height: 1.4;"><strong style="display: inline-block; min-width: 140px;">Line of Business:</strong> ${window.escapeHtml(b.type || "Unclassified")}</div>
         </div>`,
         )
-        .join("")}</div></td></tr></tbody>
-    </table>`;
+        .join("")}
+      </div>
+    </div>`,
+    )
+    .join("");
 
   document.getElementById("preview-content").innerHTML = innerHtml;
   docxContent = `<html><head><meta charset="utf-8"><style>body{font-family:sans-serif;line-height:1.5;}</style></head><body>${innerHtml}</body></html>`;
