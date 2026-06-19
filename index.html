@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tagbilaran City MSME Registry</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+    <style>
+      /* Print styles */
+      @media print {
+        @page { margin: 20mm 15mm; }
+        .page, .site-header, .toolbar, #type-combobox-wrap, .stats-grid, .list-header, 
+        #pagination, #toast-container, .modal-backdrop, .biz-actions {
+          display: none !important;
+        }
+        body { background: white !important; margin: 0; padding: 0 !important; font-family: "DM Sans", serif; }
+        #print-area { display: block !important; }
+        .print-table-wrapper { width: 100%; border: none; border-collapse: collapse; }
+        .print-table-wrapper thead td { padding-bottom: 10pt; }
+        .print-table-wrapper tfoot td { padding-top: 10pt; }
+        .print-table-wrapper thead td,
+        .print-table-wrapper tbody td,
+        .print-table-wrapper tfoot td {
+          padding-left: 0;
+          padding-right: 0;
+        }
+        .print-header { text-align: center; border-bottom: 1.5pt solid #333; padding-bottom: 10pt; margin-bottom: 20pt; }
+        .print-header h2 { margin: 0; font-size: 18pt; color: #1a1a1a; text-transform: uppercase; letter-spacing: 1pt; }
+        .print-header p { margin: 5pt 0 0; font-size: 11pt; color: #444; }
+        .print-item { margin-bottom: 12pt; padding-bottom: 8pt; border-bottom: 0.5pt solid #eee; page-break-inside: avoid; }
+        .print-item-title { font-size: 12pt; margin-bottom: 4pt; color: #000; }
+        .print-item-row { font-size: 10pt; margin-bottom: 2pt; color: #333; line-height: 1.4; }
+        .print-item-row strong { display: inline-block; min-width: 130px; }
+        .print-footer { text-align: center; font-size: 9pt; border-top: 0.5pt solid #ccc; padding-top: 8pt; color: #666; font-style: italic; }
+      }
+      #print-area { display: none; }
+
+      .loader-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 60px 20px;
+        gap: 16px;
+      }
+      .loader {
+        width: 48px;
+        height: 48px;
+        border: 5px solid #f3f3f3;
+        border-top: 5px solid #2e7d32;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="page">
+
+      <!-- HEADER -->
+      <header class="site-header">
+        <div class="logo" onclick="location.reload()" style="cursor:pointer">
+          <img src="cedipo.png" alt="CEDIPO logo" />
+        </div>
+        <div style="flex: 1;">
+          <h1>Tagbilaran City MSME Registry</h1>
+          <p>City Economic Development and Investment Promotions Office · MSME</p>
+        </div>
+        <button class="btn btn-header" onclick="location.href='admin/admin.html'">
+          <i class="ti ti-arrow-left"></i> Back to Admin
+        </button>
+      </header>
+
+      <!-- MAIN -->
+      <main class="main">
+        <h1 class="section-title">Business Listings</h1>
+        <p class="section-sub">Manage and search your business listings</p>
+
+        <!-- TOOLBAR -->
+        <div class="toolbar">
+          <div class="search-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
+            </svg>
+            <input type="text" id="search-input" placeholder="Search by name, owner, or location…" />
+          </div>
+          <button class="btn" onclick="exportCSV()">↓ Export</button>
+          <button class="btn btn-primary" id="add-btn">+ Add business</button>
+        </div>
+
+        <!-- TYPE COMBOBOX FILTER -->
+        <div id="type-combobox-wrap"></div>
+
+        <!-- STATS -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="slabel">Total businesses</div>
+            <div id="total-count" class="svalue">0</div>
+            <div class="ssub">All registered MSMEs</div>
+          </div>
+          <div class="stat-card">
+            <div class="slabel">Showing results</div>
+            <div id="showing-count" class="svalue">0</div>
+            <div class="ssub">Matching records</div>
+          </div>
+          <div class="stat-card">
+            <div class="slabel">Unclassified</div>
+            <div id="unclassified-count" class="svalue">0</div>
+            <div class="ssub">Needs review</div>
+          </div>
+        </div>
+
+        <!-- LIST HEADER -->
+        <div class="list-header">
+          <span>Business listings</span>
+          <span id="page-indicator">Page 1</span>
+        </div>
+
+        <!-- LOADER -->
+        <div id="loader" class="loader-wrap">
+          <div class="loader"></div>
+          <p style="color: var(--text-muted); font-size: 0.9rem; font-weight: 500;">Fetching database records...</p>
+        </div>
+
+        <!-- BUSINESS CARDS -->
+        <div id="business-list"></div>
+
+        <!-- EMPTY STATE -->
+        <div id="empty-state" class="hidden">
+          <h3>No businesses found</h3>
+          <p>Try adjusting your search or click "+ Add business" to get started</p>
+        </div>
+
+        <!-- PAGINATION -->
+        <div id="pagination"></div>
+      </main>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast-container"></div>
+
+    <!-- DELETE MODAL -->
+    <div id="delete-modal" class="modal-backdrop">
+      <div class="modal-box sm">
+        <div style="font-size:2rem;margin-bottom:12px">🗑️</div>
+        <h2 class="modal-title">Delete this business?</h2>
+        <p style="font-size:0.875rem;color:var(--text-muted);margin-bottom:1.25rem">This action cannot be undone.</p>
+        <div class="modal-actions center">
+          <button class="mbtn" onclick="closeDeleteModal()">Cancel</button>
+          <button class="mbtn mbtn-red" onclick="confirmDelete()">Yes, delete</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADD MODAL -->
+    <div id="add-modal" class="modal-backdrop">
+      <div class="modal-box">
+        <h2 class="modal-title">Add new business</h2>
+        <form id="business-form">
+          <div class="form-grid">
+            <input class="field" type="text" id="business-name"     name="name"     required placeholder="Business name" />
+            <input class="field" type="text" id="business-location" name="location" required placeholder="Location" />
+            <input class="field" type="text" id="business-owner"    name="owner"    required placeholder="Owner name" />
+            <input class="field" type="text" id="business-type"     name="type"     placeholder="Line of business (optional)" />
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="mbtn" onclick="closeAddModal()">Cancel</button>
+            <button type="submit" class="mbtn mbtn-green">Save business</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- EDIT MODAL -->
+    <div id="edit-modal" class="modal-backdrop">
+      <div class="modal-box">
+        <h2 class="modal-title">Edit business</h2>
+        <input type="hidden" id="edit-number" />
+        <div class="form-grid">
+          <input class="field" type="text" id="edit-name"     placeholder="Business name" />
+          <input class="field" type="text" id="edit-location" placeholder="Location" />
+          <input class="field" type="text" id="edit-owner"    placeholder="Owner name" />
+          <input class="field" type="text" id="edit-type"     placeholder="Line of business (optional)" />
+        </div>
+        <div class="modal-actions">
+          <button class="mbtn" onclick="closeEditModal()">Cancel</button>
+          <button class="mbtn mbtn-blue" onclick="saveEdit()">Save changes</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW MODAL -->
+<div id="view-modal" class="modal-backdrop">
+  <div class="modal-box view-modal-box">
+
+    <!-- Green header -->
+    <div class="view-header">
+      <button class="view-close-btn" onclick="closeViewModal()">✕</button>
+      <div style="display:flex;align-items:flex-start;gap:14px;">
+        <div class="view-icon-wrap">
+          <i class="ti ti-building-store" style="font-size:26px;color:#fff;"></i>
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div class="view-biz-name" id="view-name"></div>
+          <span class="view-type-badge" id="view-type-badge"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detail rows -->
+    <div class="view-details">
+
+      <div class="view-detail-card">
+        <i class="ti ti-map-pin view-detail-icon"></i>
+        <div>
+          <div class="view-detail-label">Location</div>
+          <div class="view-detail-value" id="view-location"></div>
+        </div>
+      </div>
+
+      <div class="view-detail-card">
+        <i class="ti ti-user view-detail-icon"></i>
+        <div>
+          <div class="view-detail-label">Owner</div>
+          <div class="view-detail-value" id="view-owner"></div>
+        </div>
+      </div>
+
+      <div class="view-detail-card">
+        <i class="ti ti-tag view-detail-icon"></i>
+        <div style="flex:1;">
+          <div class="view-detail-label">Line of Business</div>
+          <div class="view-detail-value" id="view-line-of-business"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="view-footer">
+      <button class="mbtn mbtn-green" onclick="closeViewModal()">Close</button>
+    </div>
+
+  </div>
+</div>
+    </div>
+
+    <!-- Hidden print container -->
+    <div id="print-area"></div>
+
+    <!-- Load Supabase CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Load Supabase client initialization -->
+    <script src="supabaseClient.js"></script>
+    <!-- Load main application script -->
+    <script src="script.js"></script>
+  </body>
+</html>

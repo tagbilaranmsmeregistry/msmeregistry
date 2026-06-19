@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CEDIPO - Business Registry</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css"
+    />
+    <style>
+      /* Print styles */
+      @media print {
+        @page {
+          margin: 20mm 15mm;
+        }
+        .page,
+        .site-header,
+        .toolbar,
+        #type-combobox-wrap,
+        .stats-grid,
+        .list-header,
+        #pagination,
+        #toast-container,
+        .modal-backdrop,
+        .biz-actions,
+        .fixed-selection-tools {
+          display: none !important;
+        }
+        body {
+          background: white !important;
+          margin: 0;
+          padding: 0 !important;
+          font-family: "DM Sans", serif;
+        }
+        #print-area {
+          display: block !important;
+        }
+        .print-table-wrapper {
+          width: 100%;
+          border: none;
+          border-collapse: collapse;
+        }
+        .print-table-wrapper thead td {
+          padding-bottom: 10pt;
+        }
+        .print-table-wrapper tfoot td {
+          padding-top: 10pt;
+        }
+        .print-table-wrapper thead td,
+        .print-table-wrapper tbody td,
+        .print-table-wrapper tfoot td {
+          padding-left: 0;
+          padding-right: 0;
+        }
+        .print-header {
+          text-align: center;
+          border-bottom: 1.5pt solid #333;
+          padding-bottom: 10pt;
+          margin-bottom: 20pt;
+        }
+        .print-header h2 {
+          margin: 0;
+          font-size: 18pt;
+          color: #1a1a1a;
+          text-transform: uppercase;
+          letter-spacing: 1pt;
+        }
+        .print-header p {
+          margin: 5pt 0 0;
+          font-size: 11pt;
+          color: #444;
+        }
+        .print-item {
+          margin-bottom: 12pt;
+          padding-bottom: 8pt;
+          border-bottom: 0.5pt solid #eee;
+          page-break-inside: avoid;
+        }
+        .print-item-title {
+          font-size: 12pt;
+          margin-bottom: 4pt;
+          color: #000;
+        }
+        .print-item-row {
+          font-size: 10pt;
+          margin-bottom: 2pt;
+          color: #333;
+          line-height: 1.4;
+        }
+        .print-item-row strong {
+          display: inline-block;
+          min-width: 130px;
+        }
+        .print-footer {
+          text-align: center;
+          font-size: 9pt;
+          border-top: 0.5pt solid #ccc;
+          padding-top: 8pt;
+          color: #666;
+          font-style: italic;
+        }
+      }
+      #print-area {
+        display: none;
+      }
+      .modal-backdrop {
+        z-index: 2000; /* Ensure modals are above selection tools */
+      }
+
+      /* Selection Tool & Checkbox Styles */
+      .fixed-selection-tools {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: 1000;
+        background: white;
+        padding: 1.25rem;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        border: 1px solid var(--border);
+        width: 220px;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .radio-tool {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        font-size: 0.875rem;
+        color: var(--text-primary);
+        padding: 4px 0;
+      }
+      .radio-tool input {
+        width: 18px;
+        height: 18px;
+        accent-color: var(--green-mid);
+        cursor: pointer;
+      }
+      .biz-card.selected {
+        border-color: var(--green-mid);
+        background-color: var(--green-light);
+      }
+      .checkbox-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        border-radius: 6px;
+        border: 2px solid var(--border);
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .biz-card.selected .checkbox-wrapper {
+        background: var(--green-mid);
+        border-color: var(--green-mid);
+      }
+      .checkbox-wrapper::after {
+        content: "✓";
+        color: white;
+        font-size: 12px;
+        display: none;
+      }
+      .biz-card.selected .checkbox-wrapper::after {
+        display: block;
+      }
+
+      .loader-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 60px 20px;
+        gap: 16px;
+      }
+      .loader {
+        width: 48px;
+        height: 48px;
+        border: 5px solid #f3f3f3;
+        border-top: 5px solid #2e7d32;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .fixed-selection-tools {
+          bottom: 1rem;
+          right: 1rem;
+          width: 200px;
+          padding: 1rem;
+        }
+      }
+      @media (max-width: 640px) {
+        .fixed-selection-tools {
+          bottom: 0;
+          right: 0;
+          width: 100%;
+          border-radius: 16px 16px 0 0;
+          border-left: none;
+          border-right: none;
+          border-bottom: none;
+          padding: 1rem;
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 0.5rem 1rem;
+        }
+        .fixed-selection-tools > span {
+          width: 100%;
+          text-align: center;
+          margin-bottom: 0 !important;
+        }
+        .fixed-selection-tools > div {
+          width: 100%;
+          margin-top: 4px !important;
+          padding-top: 8px !important;
+        }
+        .radio-tool {
+          font-size: 0.8rem;
+        }
+        
+        /* Adjust page to not be covered by the selection tool */
+        .page {
+          padding-bottom: 140px; 
+        }
+        
+        /* Make header text smaller on mobile */
+        .site-header h1 {
+          font-size: 1.25rem !important;
+        }
+        .site-header p {
+          font-size: 0.75rem !important;
+        }
+        .site-header .logo {
+          width: 50px !important;
+          height: 50px !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="page">
+      <!-- HEADER -->
+      <header class="site-header">
+        <div class="logo" onclick="location.reload()" style="cursor: pointer">
+          <img src="cedipo.png" alt="CEDIPO logo" />
+        </div>
+        <div style="flex: 1">
+          <h1>Business Registry</h1>
+          <p>View businesses relevant to your passkey</p>
+        </div>
+        <button class="btn btn-header" onclick="logout()">
+          <i class="ti ti-logout"></i> Logout
+        </button>
+      </header>
+
+      <!-- MAIN -->
+      <main class="main">
+        <h1 class="section-title">Business Listings</h1>
+        <p class="section-sub">Businesses visible with your current passkey</p>
+
+        <!-- TOOLBAR -->
+        <div class="toolbar">
+          <div class="search-wrap">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"
+              />
+            </svg>
+            <input
+              type="text"
+              id="search-input"
+              placeholder="Search by name, owner, or location…"
+            />
+          </div>
+          <button class="btn btn-primary" onclick="printRegistry()">
+            <i class="ti ti-printer"></i> Print Registry
+          </button>
+          <button
+            class="btn btn-primary"
+            onclick="exportDocx()"
+            title="Export to Word"
+            style="background: #2b579a; border-color: #2b579a"
+          >
+            <i class="ti ti-file-text"></i> Export Word
+          </button>
+          <!-- Add business button removed for user view -->
+        </div>
+
+        <!-- TYPE COMBOBOX FILTER -->
+        <div id="type-combobox-wrap"></div>
+
+        <!-- STATS -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="slabel">Total businesses</div>
+            <div id="total-count" class="svalue">0</div>
+            <div class="ssub">Visible with passkey</div>
+          </div>
+          <div class="stat-card">
+            <div class="slabel">Showing results</div>
+            <div id="showing-count" class="svalue">0</div>
+            <div class="ssub">Matching records</div>
+          </div>
+          <!-- Unclassified stat card removed for user view -->
+        </div>
+
+        <!-- LIST HEADER -->
+        <div class="list-header">
+          <span>Business listings</span>
+          <span id="page-indicator">Page 1</span>
+        </div>
+
+        <!-- LOADER -->
+        <div id="loader" class="loader-wrap">
+          <div class="loader"></div>
+          <p
+            style="
+              color: var(--text-muted);
+              font-size: 0.9rem;
+              font-weight: 500;
+            "
+          >
+            Accessing registry...
+          </p>
+        </div>
+
+        <!-- BUSINESS CARDS -->
+        <div id="business-list"></div>
+
+        <!-- EMPTY STATE -->
+        <div id="empty-state" class="hidden">
+          <h3>No businesses found</h3>
+          <p>Try adjusting your search or check your passkey.</p>
+        </div>
+
+        <!-- PAGINATION -->
+        <div id="pagination"></div>
+      </main>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast-container"></div>
+
+    <!-- VIEW MODAL -->
+    <div id="view-modal" class="modal-backdrop">
+      <div class="modal-box view-modal-box">
+        <!-- Green header -->
+        <div class="view-header">
+          <button class="view-close-btn" onclick="closeViewModal()">✕</button>
+          <div style="display: flex; align-items: flex-start; gap: 14px">
+            <div class="view-icon-wrap">
+              <i
+                class="ti ti-building-store"
+                style="font-size: 26px; color: #fff"
+              ></i>
+            </div>
+            <div style="flex: 1; min-width: 0">
+              <div class="view-biz-name" id="view-name"></div>
+              <span class="view-type-badge" id="view-type-badge"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detail rows -->
+        <div class="view-details">
+          <div class="view-detail-card">
+            <i class="ti ti-map-pin view-detail-icon"></i>
+            <div>
+              <div class="view-detail-label">Location</div>
+              <div class="view-detail-value" id="view-location"></div>
+            </div>
+          </div>
+
+          <div class="view-detail-card">
+            <i class="ti ti-user view-detail-icon"></i>
+            <div>
+              <div class="view-detail-label">Owner</div>
+              <div class="view-detail-value" id="view-owner"></div>
+            </div>
+          </div>
+
+          <div class="view-detail-card">
+            <i class="ti ti-tag view-detail-icon"></i>
+            <div style="flex: 1">
+              <div class="view-detail-label">Line of Business</div>
+              <div class="view-detail-value" id="view-line-of-business"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="view-footer">
+          <button class="mbtn mbtn-green" onclick="closeViewModal()">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FIXED SELECTION TOOLS -->
+    <div class="fixed-selection-tools">
+      <span
+        style="
+          margin-bottom: 5px;
+          font-weight: 700;
+          font-size: 0.875rem;
+          text-transform: uppercase;
+          color: var(--text-muted);
+          display: block;
+        "
+        >Selection Tool</span
+      >
+      <label class="radio-tool">
+        <input type="radio" name="sel-tool" onclick="selectAll(true, this)" />
+        Select All
+      </label>
+      <label class="radio-tool">
+        <input type="radio" name="sel-tool" onclick="selectAllFiltered(this)" />
+        Select Filtered
+      </label>
+      <label class="radio-tool">
+        <input type="radio" name="sel-tool" onclick="selectAll(false, this)" />
+        Deselect All
+      </label>
+      <div
+        style="
+          margin-top: 10px;
+          padding-top: 10px;
+          border-top: 1px solid var(--border);
+          font-size: 0.75rem;
+          color: var(--text-muted);
+          text-align: center;
+        "
+      >
+        <span id="selected-count" style="font-weight: 700; color: #2e7d32"
+          >0</span
+        >
+        selected
+      </div>
+    </div>
+
+    <!-- PREVIEW MODAL FOR DOCX -->
+    <div id="preview-modal" class="modal-backdrop">
+      <div
+        class="modal-box"
+        style="
+          max-width: 800px;
+          max-height: 90vh;
+          display: flex;
+          flex-direction: column;
+        "
+      >
+        <h2 class="modal-title">Export Preview</h2>
+        <div
+          id="preview-content"
+          style="
+            flex: 1;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            padding: 20px;
+            background: white;
+            font-family: serif;
+            color: black;
+          "
+        >
+          <!-- Preview will be injected here -->
+        </div>
+        <div class="modal-actions">
+          <button class="mbtn" onclick="closeModal('preview-modal')">
+            Cancel
+          </button>
+          <button class="mbtn mbtn-green" id="download-docx-btn">
+            <i class="ti ti-download"></i> Download .doc
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hidden print container -->
+    <div id="print-area"></div>
+
+    <!-- Load Supabase CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Load Supabase client initialization -->
+    <script src="supabaseClient.js"></script>
+    <script>
+      // Prevent ReferenceError in user_script.js
+      var printModalContent = function() {
+        console.warn("printModalContent is not fully implemented for this view.");
+      };
+    </script>
+    <!-- Load user interface script -->
+    <script src="user_script.js"></script>
+    <script>
+      // Override loadUserData to fetch all records beyond the 1000 PostgREST server limit using pagination/chunking
+      window.loadUserData = async function() {
+        const loader = document.getElementById("loader");
+        const passkey = localStorage.getItem("user_passkey");
+        if (!passkey) return (window.location.href = "admin/login.html");
+
+        try {
+          const { data: pkData } = await window.supabase
+            .from("passkeys")
+            .select("id")
+            .eq("name", passkey)
+            .single();
+          if (!pkData) throw new Error("Invalid passkey");
+
+          // Paginated fetch for passkey_items
+          let items = [];
+          let offset = 0;
+          const limit = 1000;
+          while (true) {
+            const { data, error } = await window.supabase
+              .from("passkey_items")
+              .select("business_number")
+              .eq("passkey_id", pkData.id)
+              .range(offset, offset + limit - 1);
+            if (error) throw error;
+            if (!data || data.length === 0) break;
+            items = items.concat(data);
+            if (data.length < limit) break;
+            offset += limit;
+          }
+          const bizNumbers = items.map((it) => String(it.business_number));
+
+          let rawData = [];
+          if (bizNumbers.length > 0) {
+            const chunkSize = 1000;
+            for (let i = 0; i < bizNumbers.length; i += chunkSize) {
+              const chunk = bizNumbers.slice(i, i + chunkSize);
+              let offset = 0;
+              while (true) {
+                const { data, error } = await window.supabase
+                  .from("businesses")
+                  .select("*")
+                  .in("number", chunk)
+                  .range(offset, offset + chunkSize - 1);
+                if (error) throw error;
+                if (!data || data.length === 0) break;
+                rawData = rawData.concat(data);
+                if (data.length < chunkSize) break;
+                offset += chunkSize;
+              }
+            }
+            allBusinesses = rawData.map((b) => ({
+              number: String(b.number),
+              name: b.business_name,
+              location: b.location,
+              owner: b.owner,
+              type: b.line_of_business,
+            }));
+          }
+          applyFilters();
+          renderRegistry();
+        } catch (err) {
+          showToast("Error loading data: " + err.message, "error");
+        } finally {
+          if (loader) loader.style.display = "none";
+        }
+      };
+    </script>
+  </body>
+</html>
