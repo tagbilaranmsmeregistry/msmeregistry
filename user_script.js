@@ -359,10 +359,13 @@ function goToPage(pageNum, totalPages) {
 }
 
 function logout() {
-  if (confirm("Are you sure you want to logout?")) {
-    localStorage.removeItem("user_passkey");
-    window.location.href = "admin/login.html";
-  }
+  showMessageOption(
+    "Are you sure you want to logout?",
+    () => {
+      localStorage.removeItem("user_passkey");
+      window.location.href = "admin/login.html";
+    }
+  );
 }
 function openModal(id) {
   document.getElementById(id).classList.add("flex");
@@ -397,6 +400,53 @@ function showToast(msg, type = "success") {
     toast.style.opacity = "0";
     setTimeout(() => toast.remove(), 300);
   }, 3000);
+}
+
+function showMessageOption(message, onConfirm, onCancel) {
+  const backdrop = document.createElement("div");
+  backdrop.style.cssText =
+    "position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; z-index: 10000;";
+
+  const modal = document.createElement("div");
+  modal.style.cssText =
+    "background: white; border-radius: 12px; padding: 24px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2); max-width: 400px; text-align: center;";
+
+  const title = document.createElement("h2");
+  title.textContent = "Confirm";
+  title.style.cssText = "margin: 0 0 12px 0; font-size: 18px; color: var(--text-primary);";
+  modal.appendChild(title);
+
+  const msg = document.createElement("p");
+  msg.textContent = message;
+  msg.style.cssText = "margin: 0 0 24px 0; font-size: 14px; color: var(--text-secondary); line-height: 1.5;";
+  modal.appendChild(msg);
+
+  const btnContainer = document.createElement("div");
+  btnContainer.style.cssText = "display: flex; gap: 12px; justify-content: center;";
+
+  const cancelBtn = document.createElement("button");
+  cancelBtn.textContent = "Cancel";
+  cancelBtn.style.cssText =
+    "padding: 8px 20px; border-radius: 6px; border: 1px solid var(--border); background: white; cursor: pointer; font-size: 14px;";
+  cancelBtn.onclick = () => {
+    backdrop.remove();
+    if (onCancel) onCancel();
+  };
+  btnContainer.appendChild(cancelBtn);
+
+  const confirmBtn = document.createElement("button");
+  confirmBtn.textContent = "Yes";
+  confirmBtn.style.cssText =
+    "padding: 8px 20px; border-radius: 6px; border: none; background: #dc2626; color: white; cursor: pointer; font-size: 14px;";
+  confirmBtn.onclick = () => {
+    backdrop.remove();
+    if (onConfirm) onConfirm();
+  };
+  btnContainer.appendChild(confirmBtn);
+
+  modal.appendChild(btnContainer);
+  backdrop.appendChild(modal);
+  document.body.appendChild(backdrop);
 }
 
 document.getElementById("search-input").addEventListener("input", (e) => {
