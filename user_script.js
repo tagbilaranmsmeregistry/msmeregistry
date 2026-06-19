@@ -238,19 +238,19 @@ function exportDocx() {
 
   const innerHtml = `
     <table style="width: 100%; border-collapse: collapse;">
-      <thead><tr><td><div style="text-align: center; border-bottom: 2pt solid #000; padding-bottom: 15pt; margin-bottom: 25pt;">
+      <thead><tr><td><div style="text-align: center; border-bottom: 2pt solid #000; padding-bottom: 8pt; margin-bottom: 12pt;">
         <h2 style="margin: 0; font-size: 24pt; font-weight: bold; letter-spacing: 1px;">Tagbilaran City MSME Registry</h2>
-        <p style="margin: 8pt 0 0; color: #333; font-size: 13pt; font-weight: 600;">${reportSub}</p>
-        <div style="font-size: 11pt; margin-top: 8pt; color: #666;">Date: ${date} | Total Records: ${toExport.length}</div>
+        <p style="margin: 2pt 0 0; color: #333; font-size: 13pt; font-weight: 600;">${reportSub}</p>
+        <div style="font-size: 11pt; margin-top: 2pt; color: #666;">Date: ${date} | Total Records: ${toExport.length}</div>
       </div></td></tr></thead>
       <tbody><tr><td><div class="print-list">${toExport
         .map(
           (b, i) => `
-        <div style="margin-bottom: 18pt; padding-bottom: 12pt; border-bottom: 1pt solid #d0d0d0; page-break-inside: avoid;">
-          <div style="font-size: 14pt; font-weight: bold; margin-bottom: 8pt;">${i + 1}. ${window.escapeHtml(b.name)}</div>
-          <div style="font-size: 12pt; margin-bottom: 4pt; line-height: 1.5;"><strong style="display: inline-block; min-width: 140px;">Location:</strong> ${window.escapeHtml(b.location || "—")}</div>
-          <div style="font-size: 12pt; margin-bottom: 4pt; line-height: 1.5;"><strong style="display: inline-block; min-width: 140px;">Owner:</strong> ${window.escapeHtml(b.owner || "—")}</div>
-          <div style="font-size: 12pt; margin-bottom: 4pt; line-height: 1.5;"><strong style="display: inline-block; min-width: 140px;">Line of Business:</strong> ${window.escapeHtml(b.type || "Unclassified")}</div>
+        <div style="margin-bottom: 12pt; padding-bottom: 8pt; border-bottom: 1pt solid #d0d0d0; page-break-inside: avoid;">
+          <div style="font-size: 14pt; font-weight: bold; margin-bottom: 4pt;">${i + 1}. ${window.escapeHtml(b.name)}</div>
+          <div style="font-size: 12pt; margin-bottom: 2pt; line-height: 1.4;"><strong style="display: inline-block; min-width: 140px;">Location:</strong> ${window.escapeHtml(b.location || "—")}</div>
+          <div style="font-size: 12pt; margin-bottom: 2pt; line-height: 1.4;"><strong style="display: inline-block; min-width: 140px;">Owner:</strong> ${window.escapeHtml(b.owner || "—")}</div>
+          <div style="font-size: 12pt; margin-bottom: 2pt; line-height: 1.4;"><strong style="display: inline-block; min-width: 140px;">Line of Business:</strong> ${window.escapeHtml(b.type || "Unclassified")}</div>
         </div>`,
         )
         .join("")}</div></td></tr></tbody>
