@@ -199,8 +199,8 @@ function printRegistry() {
       ? "Selected Businesses Report"
       : "Business Registry Report";
 
-  // Group items into chunks for pagination (8 items per page)
-  const itemsPerPrintPage = 8;
+  // Group items into chunks for pagination (6 items per page to fit header)
+  const itemsPerPrintPage = 6;
   const pages = [];
   for (let i = 0; i < toPrint.length; i += itemsPerPrintPage) {
     pages.push(toPrint.slice(i, i + itemsPerPrintPage));
@@ -250,8 +250,8 @@ function exportDocx() {
       ? "Selected Businesses Report"
       : "Business Registry Report";
 
-  // Group items into chunks for pagination (8 items per page)
-  const itemsPerDocPage = 8;
+  // Group items into chunks for pagination (6 items per page to fit header)
+  const itemsPerDocPage = 6;
   const pages = [];
   for (let i = 0; i < toExport.length; i += itemsPerDocPage) {
     pages.push(toExport.slice(i, i + itemsPerDocPage));
@@ -269,11 +269,11 @@ function exportDocx() {
       <div>${pageItems
         .map(
           (b, i) => `
-        <div style="margin-bottom: 12pt; padding-bottom: 8pt; border-bottom: 1pt solid #d0d0d0;">
-          <div style="font-size: 14pt; font-weight: bold; margin-bottom: 4pt;">${pageIndex * itemsPerDocPage + i + 1}. ${window.escapeHtml(b.name)}</div>
-          <div style="font-size: 12pt; margin-bottom: 2pt; line-height: 1.4;"><strong style="display: inline-block; min-width: 140px;">Location:</strong> ${window.escapeHtml(b.location || "—")}</div>
-          <div style="font-size: 12pt; margin-bottom: 2pt; line-height: 1.4;"><strong style="display: inline-block; min-width: 140px;">Owner:</strong> ${window.escapeHtml(b.owner || "—")}</div>
-          <div style="font-size: 12pt; margin-bottom: 2pt; line-height: 1.4;"><strong style="display: inline-block; min-width: 140px;">Line of Business:</strong> ${window.escapeHtml(b.type || "Unclassified")}</div>
+        <div style="margin-bottom: 10pt; padding-bottom: 6pt; border-bottom: 1pt solid #d0d0d0;">
+          <div style="font-size: 14pt; font-weight: bold; margin-bottom: 3pt;">${pageIndex * itemsPerDocPage + i + 1}. ${window.escapeHtml(b.name)}</div>
+          <div style="font-size: 12pt; margin-bottom: 1pt; line-height: 1.3;"><strong style="display: inline-block; min-width: 140px;">Location:</strong> ${window.escapeHtml(b.location || "—")}</div>
+          <div style="font-size: 12pt; margin-bottom: 1pt; line-height: 1.3;"><strong style="display: inline-block; min-width: 140px;">Owner:</strong> ${window.escapeHtml(b.owner || "—")}</div>
+          <div style="font-size: 12pt; margin-bottom: 1pt; line-height: 1.3;"><strong style="display: inline-block; min-width: 140px;">Line of Business:</strong> ${window.escapeHtml(b.type || "Unclassified")}</div>
         </div>`,
         )
         .join("")}
