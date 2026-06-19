@@ -4,9 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tagbilaran City MSME Registry</title>
-    <!-- Always redirect to login on every visit -->
+    <!-- Redirect to login only if no active session -->
     <script>
-      window.location.replace("admin/login.html");
+      (function () {
+        var isAdmin = localStorage.getItem("is_admin") === "true";
+        var hasPasskey = !!localStorage.getItem("user_passkey");
+        if (!isAdmin && !hasPasskey) {
+          window.location.replace("admin/login.html");
+        }
+      })();
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
