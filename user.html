@@ -68,42 +68,57 @@
         }
         .print-header {
           text-align: center;
-          border-bottom: 1.5pt solid #333;
-          padding-bottom: 10pt;
-          margin-bottom: 20pt;
+          border-bottom: 2pt solid #1a1a1a;
+          padding-bottom: 15pt;
+          margin-bottom: 25pt;
         }
         .print-header h2 {
           margin: 0;
-          font-size: 18pt;
-          color: #1a1a1a;
+          font-size: 20pt;
+          color: #000;
           text-transform: uppercase;
-          letter-spacing: 1pt;
+          letter-spacing: 1.5pt;
+          font-weight: 700;
         }
         .print-header p {
-          margin: 5pt 0 0;
-          font-size: 11pt;
-          color: #444;
+          margin: 8pt 0 0;
+          font-size: 12pt;
+          color: #333;
+          font-weight: 600;
+        }
+        .print-header > div {
+          font-size: 10pt;
+          color: #666;
+          margin-top: 6pt;
         }
         .print-item {
-          margin-bottom: 12pt;
-          padding-bottom: 8pt;
-          border-bottom: 0.5pt solid #eee;
+          margin-bottom: 16pt;
+          padding-bottom: 12pt;
+          border-bottom: 1pt solid #d0d0d0;
           page-break-inside: avoid;
         }
         .print-item-title {
-          font-size: 12pt;
-          margin-bottom: 4pt;
+          font-size: 13pt;
+          margin-bottom: 6pt;
           color: #000;
+          font-weight: 700;
         }
         .print-item-row {
-          font-size: 10pt;
-          margin-bottom: 2pt;
-          color: #333;
-          line-height: 1.4;
+          font-size: 11pt;
+          margin-bottom: 3pt;
+          color: #444;
+          line-height: 1.5;
+          display: flex;
         }
         .print-item-row strong {
           display: inline-block;
-          min-width: 130px;
+          min-width: 140px;
+          font-weight: 600;
+          flex-shrink: 0;
+        }
+        .print-item-row span {
+          flex: 1;
+          word-wrap: break-word;
         }
         .print-footer {
           text-align: center;

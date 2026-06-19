@@ -202,15 +202,15 @@ function printRegistry() {
   let html = `
     <table class="print-table-wrapper">
       <thead><tr><td><div class="print-header"><h2>Tagbilaran City MSME Registry</h2><p>${reportSub}</p>
-      <div style="font-size: 9pt; margin-top: 4pt; color: #666;">Date: ${date} | Total Records: ${toPrint.length}</div></div></td></tr></thead>
+      <div>Date: ${date} | Total Records: ${toPrint.length}</div></div></td></tr></thead>
       <tbody><tr><td><div class="print-list">${toPrint
         .map(
           (b, i) => `
         <div class="print-item">
-          <div class="print-item-title"><strong>${i + 1}. ${window.escapeHtml(b.name)}</strong></div>
-          <div class="print-item-row"><strong>Location:</strong> ${window.escapeHtml(b.location || "—")}</div>
-          <div class="print-item-row"><strong>Owner:</strong> ${window.escapeHtml(b.owner || "—")}</div>
-          <div class="print-item-row"><strong>Line of Business:</strong> ${window.escapeHtml(b.type || "Unclassified")}</div>
+          <div class="print-item-title">${i + 1}. ${window.escapeHtml(b.name)}</div>
+          <div class="print-item-row"><strong>Location:</strong> <span>${window.escapeHtml(b.location || "—")}</span></div>
+          <div class="print-item-row"><strong>Owner:</strong> <span>${window.escapeHtml(b.owner || "—")}</span></div>
+          <div class="print-item-row"><strong>Line of Business:</strong> <span>${window.escapeHtml(b.type || "Unclassified")}</span></div>
         </div>`,
         )
         .join("")}</div></td></tr></tbody>
@@ -238,19 +238,19 @@ function exportDocx() {
 
   const innerHtml = `
     <table style="width: 100%; border-collapse: collapse;">
-      <thead><tr><td><div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10pt;">
-        <h2 style="margin: 0; font-size: 22pt;">Tagbilaran City MSME Registry</h2>
-        <p style="margin: 5px 0; color: #666;">${reportSub}</p>
-        <div style="font-size: 10pt; margin-top: 5px; color: #888;">Date: ${date} | Total Records: ${toExport.length}</div>
+      <thead><tr><td><div style="text-align: center; border-bottom: 2pt solid #000; padding-bottom: 15pt; margin-bottom: 25pt;">
+        <h2 style="margin: 0; font-size: 24pt; font-weight: bold; letter-spacing: 1px;">Tagbilaran City MSME Registry</h2>
+        <p style="margin: 8pt 0 0; color: #333; font-size: 13pt; font-weight: 600;">${reportSub}</p>
+        <div style="font-size: 11pt; margin-top: 8pt; color: #666;">Date: ${date} | Total Records: ${toExport.length}</div>
       </div></td></tr></thead>
       <tbody><tr><td><div class="print-list">${toExport
         .map(
           (b, i) => `
-        <div style="margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #eee; page-break-inside: avoid;">
-          <div style="font-size: 13pt; font-weight: bold; margin-bottom: 5px;">${i + 1}. ${window.escapeHtml(b.name)}</div>
-          <div style="font-size: 11pt; margin-bottom: 2px;"><strong>Location:</strong> ${window.escapeHtml(b.location || "—")}</div>
-          <div style="font-size: 11pt; margin-bottom: 2px;"><strong>Owner:</strong> ${window.escapeHtml(b.owner || "—")}</div>
-          <div style="font-size: 11pt; margin-bottom: 2px;"><strong>Line of Business:</strong> ${window.escapeHtml(b.type || "Unclassified")}</div>
+        <div style="margin-bottom: 18pt; padding-bottom: 12pt; border-bottom: 1pt solid #d0d0d0; page-break-inside: avoid;">
+          <div style="font-size: 14pt; font-weight: bold; margin-bottom: 8pt;">${i + 1}. ${window.escapeHtml(b.name)}</div>
+          <div style="font-size: 12pt; margin-bottom: 4pt; line-height: 1.5;"><strong style="display: inline-block; min-width: 140px;">Location:</strong> ${window.escapeHtml(b.location || "—")}</div>
+          <div style="font-size: 12pt; margin-bottom: 4pt; line-height: 1.5;"><strong style="display: inline-block; min-width: 140px;">Owner:</strong> ${window.escapeHtml(b.owner || "—")}</div>
+          <div style="font-size: 12pt; margin-bottom: 4pt; line-height: 1.5;"><strong style="display: inline-block; min-width: 140px;">Line of Business:</strong> ${window.escapeHtml(b.type || "Unclassified")}</div>
         </div>`,
         )
         .join("")}</div></td></tr></tbody>
