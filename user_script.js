@@ -359,8 +359,10 @@ function goToPage(pageNum, totalPages) {
 }
 
 function logout() {
-  localStorage.removeItem("user_passkey");
-  window.location.href = "admin/login.html";
+  if (confirm("Are you sure you want to logout?")) {
+    localStorage.removeItem("user_passkey");
+    window.location.href = "admin/login.html";
+  }
 }
 function openModal(id) {
   document.getElementById(id).classList.add("flex");
