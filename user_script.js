@@ -260,24 +260,29 @@ function exportDocx() {
   const innerHtml = pages
     .map(
       (pageItems, pageIndex) => `
-    <div style="margin-bottom: 20pt; padding-top: ${pageIndex > 0 ? "40pt" : "0"}; border-top: ${pageIndex > 0 ? "2pt solid #000;" : "none"}">
-      <div style="text-align: center; margin-bottom: 15pt;">
-        <h2 style="margin: 0; font-size: 24pt; font-weight: bold; letter-spacing: 1px;">Tagbilaran City MSME Registry</h2>
-        <p style="margin: 2pt 0 0; color: #333; font-size: 13pt; font-weight: 600;">${reportSub}</p>
-        <div style="font-size: 11pt; margin-top: 2pt; color: #666;">Date: ${date} | Total Records: ${toExport.length}</div>
-      </div>
-      <div>${pageItems
-        .map(
-          (b, i) => `
-        <div style="margin-bottom: 10pt; padding-bottom: 6pt; border-bottom: 1pt solid #d0d0d0;">
-          <div style="font-size: 14pt; font-weight: bold; margin-bottom: 3pt;">${pageIndex * itemsPerDocPage + i + 1}. ${window.escapeHtml(b.name)}</div>
-          <div style="font-size: 12pt; margin-bottom: 1pt; line-height: 1.3;"><strong style="display: inline-block; min-width: 140px;">Location:</strong> ${window.escapeHtml(b.location || "—")}</div>
-          <div style="font-size: 12pt; margin-bottom: 1pt; line-height: 1.3;"><strong style="display: inline-block; min-width: 140px;">Owner:</strong> ${window.escapeHtml(b.owner || "—")}</div>
-          <div style="font-size: 12pt; margin-bottom: 1pt; line-height: 1.3;"><strong style="display: inline-block; min-width: 140px;">Line of Business:</strong> ${window.escapeHtml(b.type || "Unclassified")}</div>
-        </div>`,
-        )
-        .join("")}
-      </div>
+    <div style="page-break-after: always;">
+      <table style="width: 100%; border: none; border-collapse: collapse;">
+        <thead><tr><td style="padding-left: 0; padding-right: 0;">
+          <div style="text-align: center; border-bottom: 2pt solid #1a1a1a; padding-bottom: 8pt; margin-bottom: 12pt;">
+            <h2 style="margin: 0; font-size: 20pt; color: #000; text-transform: uppercase; letter-spacing: 1.5pt; font-weight: 700;">Tagbilaran City MSME Registry</h2>
+            <p style="margin: 2pt 0 0; font-size: 12pt; color: #333; font-weight: 600;">${reportSub}</p>
+            <div style="font-size: 10pt; color: #666; margin-top: 2pt;">Date: ${date} | Total Records: ${toExport.length}</div>
+          </div>
+        </td></tr></thead>
+        <tbody><tr><td style="padding-left: 0; padding-right: 0;">
+          <div>${pageItems
+            .map(
+              (b, i) => `
+            <div style="margin-bottom: 10pt; padding-bottom: 6pt; border-bottom: 1pt solid #d0d0d0; page-break-inside: avoid;">
+              <div style="font-size: 13pt; margin-bottom: 3pt; color: #000; font-weight: 700;">${pageIndex * itemsPerDocPage + i + 1}. ${window.escapeHtml(b.name)}</div>
+              <div style="font-size: 11pt; margin-bottom: 1pt; color: #444; line-height: 1.3; display: flex;"><strong style="display: inline-block; min-width: 140px; font-weight: 600; flex-shrink: 0;">Location:</strong> <span style="flex: 1; word-wrap: break-word;">${window.escapeHtml(b.location || "—")}</span></div>
+              <div style="font-size: 11pt; margin-bottom: 1pt; color: #444; line-height: 1.3; display: flex;"><strong style="display: inline-block; min-width: 140px; font-weight: 600; flex-shrink: 0;">Owner:</strong> <span style="flex: 1; word-wrap: break-word;">${window.escapeHtml(b.owner || "—")}</span></div>
+              <div style="font-size: 11pt; margin-bottom: 1pt; color: #444; line-height: 1.3; display: flex;"><strong style="display: inline-block; min-width: 140px; font-weight: 600; flex-shrink: 0;">Line of Business:</strong> <span style="flex: 1; word-wrap: break-word;">${window.escapeHtml(b.type || "Unclassified")}</span></div>
+            </div>`,
+            )
+            .join("")}
+        </div></td></tr></tbody>
+      </table>
     </div>`,
     )
     .join("");
