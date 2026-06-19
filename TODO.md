@@ -1,0 +1,6 @@
+- [ ] Inspect existing authentication/session patterns (current PHP endpoints)
+- [ ] Create admin/login.html matching existing index.html styling
+- [ ] Add admin/admin.html basic protected landing (after login)
+- [ ] Implement lightweight auth mechanism (PIN + passkey) using PHP endpoint + session
+- [ ] Wire login UI to auth endpoint, store session, redirect to admin/admin.html
+- [ ] Verify page loads and login flows for both users

@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Supabase Test</title>
+  </head>
+  <body>
+    <h1>Testing Supabase...</h1>
+
+    <script type="module">
+      import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+      const supabaseUrl = "https://zxszyarzzhzhnwuwaqaa.supabase.co";
+      const supabaseKey =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp4c3p5YXJ6emh6aG53dXdhcWFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5NTYxNjYsImV4cCI6MjA5NjUzMjE2Nn0.bH94t8zYRgPFq3g4LyvBZZ7lcWrlYC2PSR03Bzrbi94";
+
+      const supabase = createClient(supabaseUrl, supabaseKey);
+
+      async function testConnection() {
+        const { data, error } = await supabase.from("businesses").select("*");
+
+        console.log("DATA:", data);
+        console.log("ERROR:", error);
+
+        if (error) {
+          document.body.innerHTML += `<p style="color:red">${error.message}</p>`;
+        } else {
+          document.body.innerHTML += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+        }
+      }
+
+      testConnection();
+    </script>
+  </body>
+</html>
