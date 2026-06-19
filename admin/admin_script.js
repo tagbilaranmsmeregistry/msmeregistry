@@ -118,39 +118,54 @@ function renderPagination(totalItems) {
   backBtn.textContent = "← Back";
   backBtn.className = "page-btn";
   backBtn.disabled = currentPage === 1;
-  backBtn.onclick = () => {
+  backBtn.onclick = (e) => {
+    e.stopPropagation();
     currentPage--;
     renderRegistry();
   };
   pagination.appendChild(backBtn);
 
-  const info = document.createElement("span");
-  info.className = "page-info";
-  info.textContent = `Page ${currentPage} of ${totalPages}`;
-  pagination.appendChild(info);
+  // Go To page section
+  const goToContainer = document.createElement("div");
+  goToContainer.style.cssText =
+    "display: flex; align-items: center; gap: 8px; margin: 0 10px;";
 
-  const input = document.createElement("input");
-  input.type = "number";
-  input.min = 1;
-  input.max = totalPages;
-  input.placeholder = "Go to…";
-  input.className = "page-input";
-  input.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") {
-      const p = parseInt(input.value);
-      if (p >= 1 && p <= totalPages) {
-        currentPage = p;
-        renderRegistry();
-      }
-    }
-  });
-  pagination.appendChild(input);
+  const goToLabel = document.createElement("span");
+  goToLabel.textContent = "Go to:";
+  goToLabel.style.cssText =
+    "font-size: 0.875rem; color: var(--text-secondary);";
+  goToContainer.appendChild(goToLabel);
+
+  const goToInput = document.createElement("input");
+  goToInput.type = "number";
+  goToInput.min = "1";
+  goToInput.max = totalPages;
+  goToInput.value = currentPage;
+  goToInput.style.cssText =
+    "width: 50px; padding: 6px 8px; border-radius: 4px; border: 1px solid var(--border); font-size: 0.875rem;";
+  goToContainer.appendChild(goToInput);
+
+  const pageCount = document.createElement("span");
+  pageCount.textContent = `of ${totalPages}`;
+  pageCount.style.cssText =
+    "font-size: 0.875rem; color: var(--text-secondary);";
+  goToContainer.appendChild(pageCount);
+
+  const goBtn = document.createElement("button");
+  goBtn.textContent = "Go";
+  goBtn.style.cssText =
+    "padding: 6px 12px; border-radius: 4px; border: 1px solid var(--border); background: white; cursor: pointer; font-size: 0.875rem;";
+  goBtn.onclick = () => goToPage(parseInt(goToInput.value), totalPages);
+  goToContainer.appendChild(goBtn);
+
+  pagination.appendChild(goToContainer);
 
   const nextBtn = document.createElement("button");
   nextBtn.textContent = "Next →";
   nextBtn.className = "page-btn";
   nextBtn.disabled = currentPage === totalPages;
-  nextBtn.onclick = () => {
+  nextBtn.onclick = (e) => {
+    e.stopPropagation();
     currentPage++;
     renderRegistry();
   };
@@ -174,6 +189,18 @@ function updateStats() {
     selectedIds.size.toLocaleString();
   document.getElementById("selected-count").textContent =
     selectedIds.size.toLocaleString();
+}
+
+function goToPage(pageNum, totalPages) {
+  if (pageNum < 1 || pageNum > totalPages || isNaN(pageNum)) {
+    showToast(
+      `Please enter a page number between 1 and ${totalPages}`,
+      "error",
+    );
+    return;
+  }
+  currentPage = pageNum;
+  renderRegistry();
 }
 
 function toggleSelection(id) {
