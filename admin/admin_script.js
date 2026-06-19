@@ -259,10 +259,15 @@ async function savePasskey() {
       if (itemsError) throw itemsError;
     }
 
-    showToast(`Passkey ${id ? "updated" : "saved"} successfully`);
-    cancelEditPasskey(); // Reset form after save/update
-    fetchPasskeys();
-    renderRegistry();
+    const actionType = id ? "updated" : "saved";
+    showMessageOption(
+      `Passkey "${name}" has been ${actionType} successfully with ${items.length} business(es).`,
+      () => {
+        cancelEditPasskey(); // Reset form after save/update
+        fetchPasskeys();
+        renderRegistry();
+      },
+    );
   } catch (err) {
     showToast(err.message, "error");
   }
