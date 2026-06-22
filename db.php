@@ -1,6 +1,6 @@
 <?php
-$host     = getenv('DB_HOST')     ?: "db.zxszyarzzhzhnwuwaqaa.supabase.co";
-$port     = getenv('DB_PORT')     ?: "5432";
+$host     = getenv('DB_HOST')     ?: "db.yoizmfjjlmajwcchmtlt.supabase.co";
+$port     = getenv('DB_PORT')     ?: "6543";
 $dbname   = getenv('DB_NAME')     ?: "postgres";
 $user     = getenv('DB_USER')     ?: "postgres";
 $password = getenv('DB_PASSWORD') ?: "Portrias mark22";

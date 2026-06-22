@@ -1,3 +1,4 @@
+// v2.0 - Updated Supabase credentials (yoizmfjjlmajwcchmtlt)
 // Helper for escaping HTML
 window.escapeHtml =
   window.escapeHtml ||

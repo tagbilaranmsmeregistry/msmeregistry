@@ -1,7 +1,6 @@
 // Initialize using the global 'supabase' variable from the CDN script tag
-const supabaseUrl = "https://zxszyarzzhzhnwuwaqaa.supabase.co";
-const supabaseKey =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp4c3p5YXJ6emh6aG53dXdhcWFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5NTYxNjYsImV4cCI6MjA5NjUzMjE2Nn0.bH94t8zYRgPFq3g4LyvBZZ7lcWrlYC2PSR03Bzrbi94"; // Replace with your 'anon/public' key
+const supabaseUrl = "https://yoizmfjjlmajwcchmtlt.supabase.co";
+const supabaseKey = "sb_publishable_fs0z84TXTh5V35AQSBqJzw_YC0RbhBJ"; // Replace with your 'anon/public' key
 
 // Initialize client and assign to window.supabase to replace the library global object with the client instance
 const clientInstance = supabase.createClient(supabaseUrl, supabaseKey);
@@ -15,7 +14,7 @@ window.supabase = clientInstance;
  * @returns {Promise<Array>} A promise that resolves to an array of all records.
  * @throws {Error} If any Supabase query encounters an error.
  */
-window.fetchAllRecords = async function(tableName, selectQuery = '*') {
+window.fetchAllRecords = async function (tableName, selectQuery = "*") {
   let allRecords = [];
   let offset = 0;
   const limit = 1000; // PostgREST default max_rows. We fetch in chunks of this size.
@@ -38,10 +37,10 @@ window.fetchAllRecords = async function(tableName, selectQuery = '*') {
 
 /**
  * Simple HTML escaping to prevent XSS.
- * @param {string} str 
+ * @param {string} str
  * @returns {string}
  */
-window.escapeHtml = function(str) {
+window.escapeHtml = function (str) {
   if (!str) return "";
   return str
     .replace(/&/g, "&amp;")
@@ -50,4 +49,3 @@ window.escapeHtml = function(str) {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
 };
-

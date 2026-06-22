@@ -1,10 +1,21 @@
-const { Client } = require('pg');
+const { Client } = require("pg");
 
 const regions = [
-  'us-east-1', 'us-east-2', 'us-west-1', 'us-west-2',
-  'ap-southeast-1', 'ap-southeast-2', 'ap-northeast-1', 'ap-northeast-2', 'ap-south-1',
-  'eu-west-1', 'eu-west-2', 'eu-west-3', 'eu-central-1',
-  'sa-east-1', 'ca-central-1'
+  "us-east-1",
+  "us-east-2",
+  "us-west-1",
+  "us-west-2",
+  "ap-southeast-1",
+  "ap-southeast-2",
+  "ap-northeast-1",
+  "ap-northeast-2",
+  "ap-south-1",
+  "eu-west-1",
+  "eu-west-2",
+  "eu-west-3",
+  "eu-central-1",
+  "sa-east-1",
+  "ca-central-1",
 ];
 
 async function tryAll() {
@@ -14,17 +25,17 @@ async function tryAll() {
       host: host,
       port: 6543,
       database: "postgres",
-      user: "postgres.zxszyarzzhzhnwuwaqaa",
+      user: "postgres.yoizmfjjlmajwcchmtlt",
       password: "Portrias mark22",
       ssl: {
-        rejectUnauthorized: false
-      }
+        rejectUnauthorized: false,
+      },
     });
 
     try {
       await client.connect();
       console.log(`SUCCESS connected to region ${region}`);
-      const res = await client.query('SELECT NOW()');
+      const res = await client.query("SELECT NOW()");
       console.log(res.rows);
       await client.end();
       return; // Stop if success

@@ -1,14 +1,14 @@
-const { Client } = require('pg');
+const { Client } = require("pg");
 
 const client = new Client({
-  host: "db.zxszyarzzhzhnwuwaqaa.supabase.co",
+  host: "db.yoizmfjjlmajwcchmtlt.supabase.co",
   port: 5432,
   database: "postgres",
   user: "postgres",
   password: "Portrias mark22",
   ssl: {
-    rejectUnauthorized: false
-  }
+    rejectUnauthorized: false,
+  },
 });
 
 async function main() {
@@ -29,7 +29,6 @@ async function main() {
     `);
     console.log("\nColumns of public.passkey_items:");
     console.log(res2.rows);
-
   } catch (err) {
     console.error(err);
   } finally {
