@@ -616,6 +616,35 @@
       </div>
     </div>
 
+    <!-- DELETE BUSINESS MODAL -->
+    <div id="delete-biz-modal" class="modal-backdrop">
+      <div class="modal-box sm">
+        <div style="font-size: 2rem; margin-bottom: 12px">🗑️</div>
+        <h2 class="modal-title">Delete Business?</h2>
+        <p
+          style="
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 1.25rem;
+          "
+        >
+          Are you sure you want to delete "<span
+            id="biz-to-delete-name"
+            style="font-weight: 600"
+          ></span
+          >"? This action cannot be undone.
+        </p>
+        <div class="modal-actions center">
+          <button class="mbtn" onclick="closeModal('delete-biz-modal')">
+            Cancel
+          </button>
+          <button class="mbtn mbtn-red" onclick="confirmDeleteBusiness()">
+            Yes, delete
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- VIEW PASSKEY MODAL -->
     <div id="view-passkey-modal" class="modal-backdrop">
       <div

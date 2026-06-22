@@ -93,7 +93,9 @@ function renderRegistry() {
     card.className = `biz-card ${isSelected ? "selected" : ""}`;
     card.onclick = () => toggleSelection(b.number);
 
+    const bizNameSafe = window.escapeHtml(b.name).replace(/'/g, "\\'");
     card.innerHTML = `
+      <button class="biz-delete-btn" title="Delete business" onclick="event.stopPropagation(); window.openDeleteBizModal('${b.number}', '${bizNameSafe}')"><i class="ti ti-trash"></i></button>
       <div class="biz-card-header" style="width:100%">
         <div class="biz-name">${window.escapeHtml(b.name)}</div>
         <div class="checkbox-wrapper"></div>
