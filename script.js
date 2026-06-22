@@ -387,8 +387,21 @@ async function handleAddSubmit(e) {
     return showToast("Please fill in all required fields.", "info");
   }
 
-  const { error } = await supabase.from("businesses").insert([
+  // Auto-increment polyfill for the database
+  const { data: maxData } = await window.supabase
+    .from("businesses")
+    .select("number")
+    .order("number", { ascending: false })
+    .limit(1);
+
+  let nextNumber = 1;
+  if (maxData && maxData.length > 0) {
+    nextNumber = maxData[0].number + 1;
+  }
+
+  const { error } = await window.supabase.from("businesses").insert([
     {
+      number: nextNumber,
       business_name: name,
       location: location,
       owner: owner,
@@ -443,7 +456,7 @@ async function saveEdit() {
     .toUpperCase();
   const type = document.getElementById("edit-type").value.trim().toUpperCase();
 
-  const { error } = await supabase
+  const { error } = await window.supabase
     .from("businesses")
     .update({
       business_name: name,
@@ -476,7 +489,7 @@ function closeDeleteModal() {
 }
 
 async function confirmDelete() {
-  const { error } = await supabase
+  const { error } = await window.supabase
     .from("businesses")
     .delete()
     .eq("number", deleteTarget);
