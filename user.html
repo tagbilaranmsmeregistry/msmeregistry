@@ -25,7 +25,7 @@
       /* Print styles */
       @media print {
         @page {
-          margin: 20mm 15mm;
+          margin: 0;
         }
         .page,
         .site-header,
@@ -121,6 +121,8 @@
           word-wrap: break-word;
         }
         .print-page {
+          box-sizing: border-box;
+          padding: 20mm 15mm;
           page-break-after: always;
         }
         .print-page:last-child {

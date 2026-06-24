@@ -230,7 +230,15 @@ function printRegistry() {
     .join("");
 
   document.getElementById("print-area").innerHTML = html;
-  setTimeout(() => window.print(), 600);
+  const oldTitle = document.title;
+  setTimeout(() => {
+    try {
+      document.title = "";
+      window.print();
+    } finally {
+      document.title = oldTitle;
+    }
+  }, 600);
 }
 
 function exportDocx() {
